@@ -9,6 +9,7 @@ namespace Fab\Vidi\Service;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -27,6 +28,12 @@ class DataService implements SingletonInterface
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $this->getQueryBuilder($tableName);
+
+        $queryBuilder
+            ->getRestrictions()
+            ->removeAll()
+            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+
         $queryBuilder
             ->select('*')
             ->from($tableName);
